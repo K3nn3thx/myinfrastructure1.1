@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Infrastructure List App</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0d6efd" />
+
+  <style>
+    
+    body {
+      background-image: url('icon-192.png'); 
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+
+   
+    .card {
+      border-radius: 15px;
+      background-color: rgba(255, 255, 255, 0.85);
+      padding: 20px;
+    }
+
+   
+    #crowdedList .list-group-item {
+      background-color: rgba(226, 83, 83, 0.468);
+      margin-bottom: 5px;
+    }
+
+    #nonList .list-group-item {
+      background-color: rgba(58, 229, 58, 0.44);
+      margin-bottom: 5px;
+    }
+
+    h2, h5 {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8">
+
+      <div class="card shadow p-4">
+        <h2 class="mb-4">Place Infrastructure List</h2>
+
+        <!-- Input form -->
+        <div class="input-group mb-3">
+          <input type="text" id="placeInput" class="form-control" placeholder="Enter place name...">
+          <select id="categorySelect" class="form-select">
+            <option value="crowded">🏙️ Crowded Infrastructure</option>
+            <option value="non">🌿 Non-Infrastructure</option>
+          </select>
+          <button class="btn btn-primary" onclick="addPlace()">Add</button>
+        </div>
+
+        <h5 class="mt-4">🏙️ Crowded Infrastructure</h5>
+        <ul id="crowdedList" class="list-group mb-3"></ul>
+
+        <h5>🌿 Non-Infrastructure</h5>
+        <ul id="nonList" class="list-group"></ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const crowdedList = document.getElementById("crowdedList");
+  const nonList = document.getElementById("nonList");
+  const placeInput = document.getElementById("placeInput");
+  const categorySelect = document.getElementById("categorySelect");
+
+  const crowdedPlaces = ["Mandurriao", "City Proper", "Iloilo Business Park", "Calle Real"];
+  const nonCrowdedPlaces = ["Pavia", "Santa Barbara", "Dumangas", "Janiuay"];
+
+  function createListItem(place) {
+    const li = document.createElement("li");
+    li.className = "list-group-item d-flex justify-content-between align-items-center";
+    li.textContent = place;
+
+    // Add remove button
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "btn btn-sm btn-danger";
+    removeBtn.textContent = "Remove";
+    removeBtn.onclick = () => li.remove();
+
+    li.appendChild(removeBtn);
+    return li;
+  }
+
+  function populateLists() {
+    crowdedPlaces.forEach(place => crowdedList.appendChild(createListItem(place)));
+    nonCrowdedPlaces.forEach(place => nonList.appendChild(createListItem(place)));
+  }
+
+  function addPlace() {
+    const place = placeInput.value.trim();
+    const category = categorySelect.value;
+
+    if (!place) return; 
+
+    const li = createListItem(place);
+
+    if (category === "crowded") {
+      crowdedList.appendChild(li);
+    } else {
+      nonList.appendChild(li);
+    }
+
+    placeInput.value = "";
+  }
+
+  //
+  populateLists();
+
+ 
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js")
+      .then(() => console.log("Service Worker Registered"))
+      .catch(err => console.log("SW Error:", err));
+  }
+</script>
+
+</body>
+</html>
